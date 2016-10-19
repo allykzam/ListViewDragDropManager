@@ -121,6 +121,26 @@ namespace WPF.JoshSmith.ServiceProviders.UI
             private set { this.isDragInProgress = value; }
         }
 
+        /// <summary>
+        /// Gets or sets optional minimal distance mouse pointer has to be dragged horizontally before it is considered a drag operation.
+        /// If value is not set, <see cref="SystemParameters.MinimumHorizontalDragDistance"/> is used.
+        /// Set to <see cref="Double.PositiveInfinity"/> to prevent horizontal drag
+        /// (which does not make sense with standard ListView's vertical layout).
+        /// </summary>
+        public double? MinimumHorizontalDragDistance { get; set; }
+        /// <summary>
+        /// Gets or sets optional minimal distance mouse pointer has to be dragged vertically before it is considered a drag operation.
+        /// If value is not set, <see cref="SystemParameters.MinimumVerticalDragDistance"/> is used.
+        /// Set to <see cref="Double.PositiveInfinity"/> to prevent vertical drag.
+        /// </summary>
+        public double? MinimumVerticalDragDistance { get; set; }
+
+        /// <summary>
+        /// Gets or sets precondition for dragging. If set to <c>null</c> (default value) drag is always allowed.
+        /// Provided <see cref="Point"/> is the mouse position relative to the list view.
+        /// </summary>
+        public Func<Point, bool> DraggingPrecondition { get; set; }
+
         #endregion // IsDragInProgress
 
         #region ListView
@@ -407,10 +427,10 @@ namespace WPF.JoshSmith.ServiceProviders.UI
                 if (this.indexToSelect == -1)
                     return false;
 
-                if (!this.HasCursorLeftDragThreshold)
+                if (false.Equals(this.DraggingPrecondition?.Invoke(this.ptMouseDown)))
                     return false;
 
-                return true;
+                return this.HasCursorLeftDragThreshold;
             }
         }
 
@@ -478,8 +498,8 @@ namespace WPF.JoshSmith.ServiceProviders.UI
                 double btmOffset = Math.Abs(bounds.Height - ptInItem.Y);
                 double vertOffset = Math.Min(topOffset, btmOffset);
 
-                double width = SystemParameters.MinimumHorizontalDragDistance * 2;
-                double height = Math.Min(SystemParameters.MinimumVerticalDragDistance, vertOffset) * 2;
+                double width = (this.MinimumHorizontalDragDistance ?? SystemParameters.MinimumHorizontalDragDistance) * 2;
+                double height = Math.Min(this.MinimumVerticalDragDistance ?? SystemParameters.MinimumVerticalDragDistance, vertOffset) * 2;
                 Size szThreshold = new Size(width, height);
 
                 Rect rect = new Rect(this.ptMouseDown, szThreshold);
