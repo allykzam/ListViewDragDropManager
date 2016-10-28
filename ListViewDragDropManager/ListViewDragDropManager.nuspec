@@ -7,7 +7,7 @@
     <authors>Josh Smith,Anthony Perez</authors>
     <owners>Anthony Perez</owners>
     <licenseUrl>http://www.codeproject.com/info/cpol10.aspx</licenseUrl>
-    <projectUrl>http://www.codeproject.com/Articles/17266/Drag-and-Drop-Items-in-a-WPF-ListView</projectUrl>
+    <projectUrl>https://github.com/amazingant/ListViewDragDropManager</projectUrl>
     <description>Drag and Drop Items in a WPF ListView</description>
     <copyright>Copyright 2007</copyright>
   </metadata>
